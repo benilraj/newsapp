@@ -1,0 +1,73 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="login-style.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in</title>
+</head>
+
+<body>
+    <div class="main">
+        <div style="height:30px;"></div>
+        <p class="sign" align="center">Sign in</p>
+        <input class="un " type="text" align="center" placeholder="Username" id="username">
+        <input class="pass" type="password" align="center" placeholder="Password" id="password">
+        <a onclick="login()" class="submit" align="center">Sign in</a>
+        <h3 style="text-align:center;color:red;" id="result"></h3>
+    </div>
+
+</body>
+
+</html>
+
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-database.js"></script>
+
+<script id="MainScript">
+    var firebaseConfig = {
+        apiKey: "AIzaSyDbVkLEeTxh0kHsAfCi5jVrSgM0GWMkkrg",
+        authDomain: "forward-map-253107.firebaseapp.com",
+        databaseURL: "https://forward-map-253107.firebaseio.com",
+        projectId: "forward-map-253107",
+        storageBucket: "forward-map-253107.appspot.com",
+        messagingSenderId: "303751824031",
+        appId: "1:303751824031:web:84e018036f47fc970458aa",
+        measurementId: "G-5GLCNH556S"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function login() {
+        var userName = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        firebase.database().ref('login/' + userName).on('value', function (snapshot) {
+            console.log(snapshot.val());
+            var details = snapshot.val();
+            if (details != null) {
+                if (userName == details['user'] && password == details['password']) {
+                    console.log('login success');
+                    sessionStorage.setItem("user", details['user']);
+                    window.location.href = "post.html";
+                }
+                else {
+                    console.log('invalid password');
+                    document.getElementById('result').innerText = "Invalid Credentials";
+                    document.getElementById('username').value = "";
+                    document.getElementById('password').value = "";
+                    document.getElementById('username').focus();
+                }
+            }
+            else {
+                console.log('invalid password');
+                document.getElementById('result').innerText = "Invalid Credentials";
+                document.getElementById('username').value = "";
+                document.getElementById('password').value = "";
+                document.getElementById('username').focus();
+            }
+        });
+    }
+
+
+
+</script>

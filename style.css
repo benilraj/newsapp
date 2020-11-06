@@ -1,0 +1,9 @@
+body{
+    background-image: url("bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.gap{
+margin-bottom:20px !important;
+border-radius: 5px;
+}

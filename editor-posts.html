@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <title>Read News</title>
+    <script>
+        console.log(sessionStorage.getItem("user"));
+        if (sessionStorage.getItem("user") == null || sessionStorage.getItem("user") == "") {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-2">
+                <button class="btn btn-danger btn-block" onclick='logout()'>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="jumbotron">
+            <p class="h1 text-danger">
+                Everyday News
+            </p>
+        </div>
+        <div id="place">
+
+        </div>
+
+    </div>
+</body>
+
+</html>
+
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-database.js"></script>
+
+<script id="MainScript">
+    var firebaseConfig = {
+        apiKey: "AIzaSyDbVkLEeTxh0kHsAfCi5jVrSgM0GWMkkrg",
+        authDomain: "forward-map-253107.firebaseapp.com",
+        databaseURL: "https://forward-map-253107.firebaseio.com",
+        projectId: "forward-map-253107",
+        storageBucket: "forward-map-253107.appspot.com",
+        messagingSenderId: "303751824031",
+        appId: "1:303751824031:web:84e018036f47fc970458aa",
+        measurementId: "G-5GLCNH556S"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    var data;
+    var template = "";
+    function getData() {
+        firebase.database().ref('news').on('value', function (snapshot) {
+            data = snapshot.val();
+            console.log(snapshot.val());
+            refreshData();
+        });
+    }
+
+    function refreshData() {
+        for (x in data) {
+            //console.log(data[x]['heading']);
+            template += '<div class="row"><div class="col-sm-11"> <details class="bg-light gap">        <summary class="h3"  style="height:50px;">' + data[x]['heading'] + '</summary>        <p class="h5">' + data[x]['content'] + ' </p>      </details></div> <div class="col-sm-1"> <button class="btn btn-lg btn-block text-danger" onclick="deleteData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-trash" aria-hidden="true"></i></button></div></div>'
+        }
+        document.getElementById('place').innerHTML = template;
+    }
+    function logout() {
+        sessionStorage.setItem("user", "");
+        window.location.href = "login.html";
+    }
+    function deleteData(heading) {
+        if (window.confirm("Are you sure you want to delete this article?")) {
+            console.log(heading);
+            firebase.database().ref('news/' + heading).remove();
+            template = "";
+            getData();
+        }
+    }
+    window.onload = getData;
+</script>
