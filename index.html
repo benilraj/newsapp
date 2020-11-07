@@ -54,7 +54,7 @@
     function refreshData() {
         for (x in data) {
            //console.log(data[x]['heading']);
-           template+=' <details class="bg-light gap">        <summary class="h3"  style="height:50px;">'+data[x]['heading']+'</summary>        <p class="h5">'+data[x]['content']+' </p>      </details>'
+           template+=' <details class="bg-light gap">        <summary class="h3"  style="max-height:70px;">'+data[x]['heading']+'</summary>        <p class="h5">'+data[x]['content']+' </p>      </details>'
         }
         document.getElementById('place').innerHTML=template;
     }
