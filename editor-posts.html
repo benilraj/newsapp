@@ -109,7 +109,7 @@
     function refreshData() {
         for (x in data) {
             //console.log(data[x]['heading']);
-            template += '<div class="row"><div class="col-sm-10"> <details class="bg-light gap">        <summary class="h3"  style="height:50px;">' + data[x]['heading'] + '</summary>        <p class="h5">' + data[x]['content'] + ' </p>      </details></div><div class="col-sm-1"> <button class="btn btn-lg btn-block text-warning" onclick="editData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></div> <div class="col-sm-1"> <button class="btn btn-lg btn-block text-danger" onclick="deleteData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-trash" aria-hidden="true"></i></button></div></div>'
+            template += '<div class="row"><div class="col-sm-10"> <details class="bg-light gap">        <summary class="h3"  style="max-height:70px;">' + data[x]['heading'] + '</summary>        <p class="h5">' + data[x]['content'] + ' </p>      </details></div><div class="col-sm-1"> <button class="btn btn-lg btn-block text-warning" onclick="editData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></div> <div class="col-sm-1"> <button class="btn btn-lg btn-block text-danger" onclick="deleteData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-trash" aria-hidden="true"></i></button></div></div>'
         }
         document.getElementById('place').innerHTML = template;
     }
