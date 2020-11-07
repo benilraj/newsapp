@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
     <title>Read News</title>
     <script>
         console.log(sessionStorage.getItem("user"));
@@ -37,6 +43,37 @@
         </div>
 
     </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update News</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span class=" h5 ">Heading: </span>
+                    <div class="row form-group">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="heading" placeholder="Heading for the Article">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-12">
+                            <span class="h5 ">Content:</span>
+                            <textarea id="content" rows="10" class="form-control"
+                                placeholder="Content for the article"></textarea>
+                        </div>
+                    </div>
+                    <button id="submit" onclick="updateData()"" class=" btn btn-primary float-right
+                        btn-block">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
@@ -61,6 +98,7 @@
     var data;
     var template = "";
     function getData() {
+        template = "";
         firebase.database().ref('news').on('value', function (snapshot) {
             data = snapshot.val();
             console.log(snapshot.val());
@@ -71,7 +109,7 @@
     function refreshData() {
         for (x in data) {
             //console.log(data[x]['heading']);
-            template += '<div class="row"><div class="col-sm-11"> <details class="bg-light gap">        <summary class="h3"  style="height:50px;">' + data[x]['heading'] + '</summary>        <p class="h5">' + data[x]['content'] + ' </p>      </details></div> <div class="col-sm-1"> <button class="btn btn-lg btn-block text-danger" onclick="deleteData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-trash" aria-hidden="true"></i></button></div></div>'
+            template += '<div class="row"><div class="col-sm-10"> <details class="bg-light gap">        <summary class="h3"  style="height:50px;">' + data[x]['heading'] + '</summary>        <p class="h5">' + data[x]['content'] + ' </p>      </details></div><div class="col-sm-1"> <button class="btn btn-lg btn-block text-warning" onclick="editData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></div> <div class="col-sm-1"> <button class="btn btn-lg btn-block text-danger" onclick="deleteData(' + "'" + data[x]['heading'] + "'" + ')"><i class="fa fa-trash" aria-hidden="true"></i></button></div></div>'
         }
         document.getElementById('place').innerHTML = template;
     }
@@ -86,6 +124,28 @@
             template = "";
             getData();
         }
+    }
+    function editData(heading) {
+        firebase.database().ref('news/' + heading).on('value', function (snapshot) {
+            console.log(snapshot.val());
+            document.getElementById('heading').value = snapshot.val().heading;
+            document.getElementById('content').value = snapshot.val().content;
+            $('#exampleModal').modal('show');
+        });
+    }
+    function updateData() {
+        var heading = document.getElementById('heading').value;
+        var content = document.getElementById('content').value;
+        firebase.database().ref('news/' + heading).update({
+            heading: heading,
+            content: content,
+        });
+        alert('Value Updated')
+        document.getElementById('heading').value = "";
+        document.getElementById('content').value = "";
+        document.getElementById('heading').focus();
+        getData();
+        $('#exampleModal').modal('hide');
     }
     window.onload = getData;
 </script>
